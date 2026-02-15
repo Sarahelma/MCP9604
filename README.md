@@ -1,3 +1,6 @@
+
+> MCP9604 is a 4-channel thermocouple amplifier chip released in Sep 2025 from the same family as the MCP9600 chip used in sparkfun's development board. I've made some modification to allow all 4 channels to be read. MCP9604 has other features including individual channel alerts, open circuit/short circuit detection and channel scan mode, which can be added later in the future.
+
 SparkFun MCP9600 Arduino Library
 ========================================
 

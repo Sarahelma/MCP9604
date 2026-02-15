@@ -219,6 +219,25 @@ Thermocouple_Type MCP9600::getThermocoupleType()
   return static_cast<Thermocouple_Type>((config >> 4) & 0x07); //shift the thermocouple-type bits into the 3 LSB
 }
 
+uint8_t MCP9600 ::setChannel(Channel_Select channel)
+{
+  uint8_t config = readSingleRegister(THERMO_SENSOR_CONFIG);  
+  bitClear(config, 3);
+  bitClear(config, 7);
+  config |= channel; 
+  if (writeSingleRegister(THERMO_SENSOR_CONFIG, config))
+    return 1; 
+  if (readSingleRegister(THERMO_SENSOR_CONFIG) != config)
+    return 2; 
+  return 0;
+}
+
+Channel_Select MCP9600::getChannel()
+{
+  uint8_t config = readSingleRegister(THERMO_SENSOR_CONFIG);
+  return static_cast<Channel_Select>(config & 0b10001000); //mask out all bits except for the channel select bits (7 and 3)
+}
+
 uint8_t MCP9600::setFilterCoefficient(uint8_t coefficient)
 {
   if (coefficient > 7)

@@ -25,7 +25,7 @@ Distributed as-is; no warranty is given.
 #include <Arduino.h>
 
 #define DEV_ADDR 0x60 //device address of the MCP9600
-#define DEV_ID_UPPER 0x40 //value of the upper half of the device ID register. lower half is used for device revision
+#define DEV_ID_UPPER 0x44 //This corresponds to MCP9604 specific upper half of the device ID register
 #define DEV_RESOLUTION 0.0625 //device resolution (temperature in C that the LSB represents)
 #define retryAttempts 3 //how many times to attempt to read a register from the thermocouple before giving up
 
@@ -62,6 +62,14 @@ enum Thermocouple_Type: uint8_t {
   TYPE_E = 0b101,
   TYPE_B = 0b110,
   TYPE_R = 0b111,
+};
+
+enum Channel_Select: uint8_t{
+  // Bits 7 and 3 correspond to channel select
+  CH_1 = 0b00000000, // 00 (0)
+  CH_2 = 0b00001000, // 01 (8)
+  CH_3 = 0b10000000, // 10 (128)
+  CH_4 = 0b10001000, // 11 (136)
 };
 
 enum Ambient_Resolution: bool {
@@ -119,6 +127,8 @@ class MCP9600{
 
   uint8_t setThermocoupleType(Thermocouple_Type type);              //Changes the type of thermocouple connected to the MCP9600. Supported types are KJTNSEBR.
   Thermocouple_Type getThermocoupleType();                          //Returns the type of thermocouple connected to the MCP9600 as found in its configuration register. Supported types are KJTNSEBR.
+  uint8_t setChannel(Channel_Select channel);                       //Selects the channel for the MCP9604 input with up to 4 channels.
+  Channel_Select getChannel();                                      //Returns the channel selected for the MCP9604 input with up ot 4 channels.    
   uint8_t setFilterCoefficient(uint8_t coefficient);               //Changes the weight of the on-chip exponential moving average filter. Set this to 0 for no filter, 1 for minimum filter, and 7 for maximum filter.
   uint8_t getFilterCoefficient();                                  //Returns the weight of the on-chip exponential moving average filter.
 
